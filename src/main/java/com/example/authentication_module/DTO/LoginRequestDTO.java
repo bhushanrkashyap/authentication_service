@@ -45,4 +45,6 @@ public class LoginRequestDTO {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public LoginRequestDTO() {}
 }

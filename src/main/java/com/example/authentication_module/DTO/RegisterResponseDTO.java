@@ -10,7 +10,6 @@ public class RegisterResponseDTO {
     private String email;
     private Role.Roles role;
     private LocalDateTime registeredAt;
-    private String message;
 
     public RegisterResponseDTO() {
     }
@@ -19,15 +18,12 @@ public class RegisterResponseDTO {
                                String username,
                                String email,
                                Role.Roles role,
-                               LocalDateTime registeredAt,
-                               String message) {
+                               LocalDateTime registeredAt) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.role = role;
-        this.registeredAt = registeredAt;
-        this.message = message;
-    }
+        this.registeredAt = registeredAt;}
 
     public Integer getId() {
         return id;
@@ -69,11 +65,5 @@ public class RegisterResponseDTO {
         this.registeredAt = registeredAt;
     }
 
-    public String getMessage() {
-        return message;
-    }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

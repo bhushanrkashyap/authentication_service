@@ -27,10 +27,11 @@ public class UserMapper {
 
             RegisterResponseDTO dto = new RegisterResponseDTO();
 
+            dto.setId(user.getId());
+            dto.setRole(user.getRole());
             dto.setUsername(user.getUsername());
             dto.setEmail(user.getEmail());
             dto.setRegisteredAt(user.getCreatedAt());
-
             return dto;
         }
     }

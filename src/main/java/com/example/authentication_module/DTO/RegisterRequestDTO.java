@@ -62,6 +62,10 @@ public class RegisterRequestDTO {
         this.state = state;
     }
 
+    public void setUserName(String userName)
+        {
+        this.userName = userName;
+        }
     @NotNull(message = "State is required")
     private String state;
 
