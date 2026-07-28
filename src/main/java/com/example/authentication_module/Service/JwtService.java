@@ -6,7 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +21,7 @@ public class JwtService {
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
+
     public String generateToken(UserModel user) {
 
         Map<String, Object> claims = new HashMap<>();
@@ -34,9 +35,9 @@ public class JwtService {
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(user.getUsername())
+                .subject(user.getEmail())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -48,25 +49,26 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
-    public String extractUsername(String token) {
+    public long getAccessTokenExpiryInSeconds() {
+        return 15 * 60L;
+    }
+    public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
 
     public Date extractExpiration(String token) {
         return extractAllClaims(token).getExpiration();
     }
+
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-
-
     public boolean isTokenValid(String token, UserDetails userDetails) {
 
-        String username = extractUsername(token);
+        String email = extractEmail(token);
 
-        return username.equals(userDetails.getUsername())
+        return email.equals(userDetails.getUsername())
                 && !isTokenExpired(token);
     }
 }

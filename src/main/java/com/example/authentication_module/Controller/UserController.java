@@ -1,29 +1,24 @@
 package com.example.authentication_module.Controller;
 
 
-import com.example.authentication_module.DTO.LoginRequestDTO;
-import com.example.authentication_module.DTO.LoginResponseDTO;
-import com.example.authentication_module.DTO.RegisterRequestDTO;
-import com.example.authentication_module.DTO.RegisterResponseDTO;
-import com.example.authentication_module.Repository.UserRepository;
+import com.example.authentication_module.DTO.*;
+import com.example.authentication_module.Service.RefreshTokenService;
 import com.example.authentication_module.Service.UserService;
-import com.example.authentication_module.model.UserModel;
 import jakarta.validation.Valid;
-import org.apache.catalina.User;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.core.Authentication;
 @RestController
 @RequestMapping("/auth")
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
+    private final RefreshTokenService refreshService;
+    public UserController(UserService userService , RefreshTokenService refreshService) {
         this.userService = userService;
+        this.refreshService = refreshService;
     }
 
     @PostMapping("/register")
@@ -42,4 +37,34 @@ public class UserController {
                 userService.loginUser(loginRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
+
+    @PutMapping("/change-password")
+    public ResponseEntity<MessageResponseDTO> changePassword(
+            Authentication authentication,
+            @Valid @RequestBody ChangePasswordRequestDTO request) {
+
+        MessageResponseDTO response =
+                userService.changePassword(authentication.getName(), request);
+
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/refresh-token")
+    public ResponseEntity<RefreshTokenResponseDTO> refreshToken(
+            @RequestBody RefreshTokenRequestDTO request) {
+
+        return ResponseEntity.ok(
+                refreshService.refreshToken(request.getRefreshToken()));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            @RequestBody LogoutRequestDTO request) {
+
+        userService.logout(request.getRefreshToken());
+
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 }

@@ -1,68 +1,44 @@
 package com.example.authentication_module.DTO;
 
-import com.example.authentication_module.model.Role;
-
 public class LoginResponseDTO {
 
-    private String username;
-    private String email;
-    private Role.Roles role;
-
-    private String token;
-    private String tokenType;
+    private String accessToken;
+    private String refreshToken;
+    private long expiresIn;
 
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(String username,
-                            String email,
-                            Role.Roles role,
-                            String token,
-                            String tokenType) {
-        this.username = username;
-        this.email = email;
-        this.role = role;
-        this.token = token;
-        this.tokenType = tokenType;
+    public LoginResponseDTO(String accessToken,
+                            String refreshToken,
+                            long expiresIn) {
+
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.expiresIn = expiresIn;
     }
 
-    public String getUsername() {
-        return username;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public String getEmail() {
-        return email;
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
-    public Role.Roles getRole() {
-        return role;
+    public long getExpiresIn() {
+        return expiresIn;
     }
 
-    public void setRole(Role.Roles role) {
-        this.role = role;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
+    public void setExpiresIn(long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }
