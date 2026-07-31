@@ -66,5 +66,31 @@ public class UserController {
 
         return ResponseEntity.ok("Logged out successfully");
     }
+    @GetMapping("/verify-email")
+    public ResponseEntity<MessageResponseDTO> verifyEmail(
+            @RequestParam String token) {
 
+        MessageResponseDTO response = userService.verifyEmail(token);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<MessageResponseDTO> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequestDTO request) {
+
+        MessageResponseDTO response =
+                userService.forgotPassword(request);
+
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<MessageResponseDTO> resetPassword(
+            @Valid @RequestBody ResetPasswordRequestDTO request){
+
+        MessageResponseDTO response =
+                userService.resetPassword(request);
+
+        return ResponseEntity.ok(response);
+    }
 }
