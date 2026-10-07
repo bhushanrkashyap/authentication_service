@@ -2,6 +2,7 @@ package com.example.authentication_module.Controller;
 
 import com.example.authentication_module.DTO.ProfileResponseDTO;
 import com.example.authentication_module.DTO.UpdateProfileRequestDTO;
+import com.example.authentication_module.Exception.UserNotFoundException;
 import com.example.authentication_module.Repository.UserRepository;
 import com.example.authentication_module.Service.UserService;
 import com.example.authentication_module.model.UserModel;
@@ -28,12 +29,13 @@ public class ProfileController {
         String email = authentication.getName();
 
         UserModel user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         return new ProfileResponseDTO(
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                user.getPhoneNumber()
         );
     }
 

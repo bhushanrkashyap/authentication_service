@@ -2,6 +2,7 @@ package com.example.authentication_module.Service;
 
 import com.example.authentication_module.DTO.RefreshTokenRequestDTO;
 import com.example.authentication_module.DTO.RefreshTokenResponseDTO;
+import com.example.authentication_module.Exception.InvalidCredentialsException;
 import com.example.authentication_module.Repository.RefreshTokenRepository;
 import com.example.authentication_module.Repository.UserRepository;
 import com.example.authentication_module.model.RefreshToken;
@@ -11,20 +12,17 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-
 public class RefreshTokenService {
 
     private final RefreshTokenRepository repo;
     private final JwtService jwtService;
 
-    public RefreshTokenService(RefreshTokenRepository repo, JwtService jwtService)
-    {
+    public RefreshTokenService(RefreshTokenRepository repo, JwtService jwtService) {
         this.repo = repo;
         this.jwtService = jwtService;
     }
 
-    public RefreshToken createrefreshToken(UserModel user)
-    {
+    public RefreshToken createrefreshToken(UserModel user) {
         RefreshToken refreshToken = new RefreshToken();
 
         refreshToken.setToken(UUID.randomUUID().toString());
@@ -40,19 +38,18 @@ public class RefreshTokenService {
         return repo.save(refreshToken);
     }
 
-
     public RefreshTokenResponseDTO refreshToken(String refreshTokenValue) {
 
         RefreshToken refreshToken = repo
                 .findByToken(refreshTokenValue)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid refresh token"));
 
         if (refreshToken.isRevoked()) {
-            throw new RuntimeException("Refresh token has been revoked");
+            throw new InvalidCredentialsException("Refresh token has been revoked");
         }
 
         if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Refresh token has expired");
+            throw new InvalidCredentialsException("Refresh token has expired");
         }
 
         UserModel user = refreshToken.getUser();

@@ -1,0 +1,66 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+*.iml
+*.iws
+*.ipr
+*.classpath
+*.project
+*.settings
+*.factorypath
+
+# Build
+target/
+*.jar
+*.war
+*.ear
+*.class
+*.log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+.AppleDouble
+
+# Maven
+.m2/
+.mvn/wrapper/*.jar
+
+# Node (if any frontend in this module)
+node_modules/
+npm-debug.log
+package-lock.json
+yarn.lock
+
+# IDE plugins
+*.swp
+*.swo
+*~
+.vscode/settings.json
+
+# Dependencies
+.gradle/
+gradlew
+gradlew.bat
+
+# Test coverage
+coverage/
+jacoco/
+
+# Documentation
+docs/
+README.md
+
+# Cache
+.cache/
+*.cache

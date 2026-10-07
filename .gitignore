@@ -50,6 +50,10 @@ build/
 
 # Environment
 .env
+*.env
+
+# Redis dump files created by local test runs
+*.rdb
 
 # Java
 *.class
@@ -58,3 +62,4 @@ build/
 Thumbs.db
 ### VS Code ###
 .vscode/
+logs/

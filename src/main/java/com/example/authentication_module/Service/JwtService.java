@@ -4,10 +4,12 @@ import com.example.authentication_module.model.UserModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +17,17 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-    private static final String SECRET =
-            "mysecretkeymysecretkeymysecretkeymysecretkey";
+    // JWT signing key and expiry are loaded from environment/configuration.
+    @Value("${JWT_SECRET}")
+    private String jwtSecret;
+
+    @Value("${JWT_EXPIRATION:86400000}")
+    private long jwtExpirationMs;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes());
+        return Keys.hmacShaKeyFor(
+                jwtSecret.getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     public String generateToken(UserModel user) {
@@ -34,10 +42,12 @@ public class JwtService {
         }
 
         return Jwts.builder()
-                .claims(claims)
-                .subject(user.getEmail())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setClaims(claims)
+                .setSubject(user.getEmail())
+                .setIssuedAt(new Date())
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + jwtExpirationMs)
+                )
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -49,11 +59,22 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
     public long getAccessTokenExpiryInSeconds() {
-        return 15 * 60L;
+        return jwtExpirationMs / 1000L;
     }
+
     public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
+    }
+
+    public Integer extractUserId(String token) {
+        Object id = extractAllClaims(token).get("id");
+        return id instanceof Number ? ((Number) id).intValue() : null;
+    }
+
+    public Date extractIssuedAt(String token) {
+        return extractAllClaims(token).getIssuedAt();
     }
 
     public Date extractExpiration(String token) {
@@ -68,7 +89,8 @@ public class JwtService {
 
         String email = extractEmail(token);
 
-        return email.equals(userDetails.getUsername())
+        return email != null
+                && email.equals(userDetails.getUsername())
                 && !isTokenExpired(token);
     }
 }

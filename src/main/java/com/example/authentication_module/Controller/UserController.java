@@ -35,7 +35,15 @@ public class UserController {
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         LoginResponseDTO response =
                 userService.loginUser(loginRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/oauth/google")
+    public ResponseEntity<LoginResponseDTO> loginWithGoogle(
+            @Valid @RequestBody GoogleLoginRequestDTO request) {
+
+        LoginResponseDTO response = userService.loginWithGoogle(request);
+        return ResponseEntity.ok(response);
     }
 
 

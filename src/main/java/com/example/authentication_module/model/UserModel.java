@@ -20,16 +20,18 @@ public class UserModel {
         this.username = username;
     }
 
-    @Column(nullable = false)
+    // Nullable: accounts provisioned via SSO (see loginWithGoogle) don't have
+    // this information yet; the user fills it in later via /profile/update.
+    @Column
     private String city;
 
-    @Column(nullable = false)
+    @Column
     private String state;
 
-    @Column(nullable = false)
+    @Column
     private String address;
 
-    @Column(nullable = false)
+    @Column
     private String country;
 
     @Column(nullable = false, unique = true)
@@ -38,10 +40,10 @@ public class UserModel {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
